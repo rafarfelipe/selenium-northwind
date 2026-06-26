@@ -178,10 +178,9 @@ evidencias/
 └── ...
 ```
 
-> 🖼 Adicione prints representativos das execuções abaixo para complementar a documentação do projeto:
+> 🖼 Evidência:
 
-<!-- Substitua o caminho abaixo pelo print real da evidência -->
-<!-- ![Evidência de Teste](evidencias/seu-screenshot.png) -->
+![Evidência de Teste](evidencias/cadastro_sucesso.png) -->
 
 ---
 
@@ -210,9 +209,9 @@ Para registrar o relatório como evidência permanente, salve um print em:
 docs/report/surefire-report.png
 ```
 
-<!-- ![Relatório Surefire](docs/report/surefire-report.png) -->
+![Relatório Surefire](docs/report/surefire-report.png) -->
 
-<!-- ![Test Cases](docs/report/test-cases.png) -->
+![Test Cases](docs/report/test-cases.png)
 
 ---
 
