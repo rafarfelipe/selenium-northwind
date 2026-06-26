@@ -1,35 +1,112 @@
 package app.vercel.northwind.login;
 
-import org.junit.jupiter.api.AfterEach;
+import app.vercel.northwind.base.BaseTest;
+import app.vercel.northwind.utils.ScreenshotUtil;
+import app.vercel.northwind.utils.TestData;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.time.Duration;
 
-public class LoginTest {
-    private WebDriver driver;
 
-    @BeforeEach
-    public void setUp() {
-        driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
+public class LoginTest extends BaseTest {
+
+    @Test
+    @DisplayName("Deve exibir erro ao submeter login com campos obrigatórios vazios")
+    public void testValidarCamposObrigatoriosVazios() throws IOException {
+        WebElement inputEmail = driver.findElement(By.name("email"));
+        WebElement inputPassword = driver.findElement(By.name("password"));
+        WebElement btnLogin = driver.findElement(By.xpath("//button[@type='submit']"));
+
+        inputEmail.click();
+        inputPassword.click();
+        btnLogin.click();
+
+        WebElement mensagem = driver.findElement(By.cssSelector("[data-testid='password-error']"));
+        Assertions.assertTrue(mensagem.isDisplayed());
+        Assertions.assertEquals(TestData.MSG_CAMPOS_OBRIGATORIOS, mensagem.getText());
+
+        ScreenshotUtil.capturar(driver, "campos_obrigatorios");
     }
 
     @Test
-    public void testValidarAcessoSemCredeciais() throws Exception {
-        driver.get("https://northwind-test-platform.vercel.app/");
-        driver.findElement(By.name("email")).click();
-        driver.findElement(By.name("password")).click();
-        driver.findElement(By.xpath("//button[@type='submit']")).click();
-        Assertions.assertTrue(
-                driver.findElement(By.cssSelector("[data-testid='password-error']")).isDisplayed(),"Email e senha são obrigatórios");
+    @DisplayName("Deve exibir erro ao informar email em formato inválido")
+    public void testValidarFormatoEmailInválido() throws IOException {
+        WebElement inputEmail = driver.findElement(By.name("email"));
+        WebElement inputPassword = driver.findElement(By.name("password"));
+        WebElement btnLogin = driver.findElement(By.xpath("//button[@type='submit']"));
+
+        inputEmail.sendKeys(TestData.EMAIL_INVALIDO);
+        inputPassword.sendKeys(TestData.SENHA_VALIDA);
+        btnLogin.click();
+
+        WebElement mensagem = driver.findElement(By.cssSelector("[data-testid='email-error']"));
+        Assertions.assertTrue(mensagem.isDisplayed());
+        Assertions.assertEquals(TestData.MSG_EMAIL_INVALIDO, mensagem.getText());
+
+        ScreenshotUtil.capturar(driver, "email_invalido");
+
     }
 
-    @AfterEach
-    public void tearDown() throws Exception {
-        driver.quit();
+    @Test
+    @DisplayName("Deve exibir erro ao tentar login com usuário não cadastrado")
+    public void testValidarUsuárioNãoCadastrado() throws IOException {
+        WebElement inputEmail = driver.findElement(By.name("email"));
+        WebElement inputPassword = driver.findElement(By.name("password"));
+        WebElement btnLogin = driver.findElement(By.xpath("//button[@type='submit']"));
+
+        inputEmail.sendKeys(TestData.EMAIL_INEXISTENTE);
+        inputPassword.sendKeys(TestData.SENHA_VALIDA);
+        btnLogin.click();
+
+        WebElement mensagem = driver.findElement(By.cssSelector("[data-testid='email-error']"));
+        Assertions.assertTrue(mensagem.isDisplayed());
+        Assertions.assertEquals(TestData.MSG_USUARIO_NAO_ENCONTRADO, mensagem.getText());
+
+        ScreenshotUtil.capturar(driver, "usuario_nao_cadastrado");
     }
+
+    @Test
+    @DisplayName("Deve exibir erro ao informar senha incorreta")
+    public void testValidarSenhaIncorreta() throws IOException {
+        WebElement inputEmail = driver.findElement(By.name("email"));
+        WebElement inputPassword =  driver.findElement(By.name("password"));
+        WebElement btnLogin = driver.findElement(By.xpath("//button[@type='submit']"));
+
+        inputEmail.sendKeys(TestData.EMAIL_VALIDO);
+        inputPassword.sendKeys(TestData.SENHA_INVALIDA);
+        btnLogin.click();
+
+        WebElement mensagem = driver.findElement(By.cssSelector("[data-testid='email-error']"));
+        Assertions.assertTrue(mensagem.isDisplayed());
+        Assertions.assertEquals(TestData.MSG_SENHA_INVALIDA, mensagem.getText());
+        ScreenshotUtil.capturar(driver, "senha_incorreta");
+
+    }
+
+    @Test
+    @DisplayName("Deve redirecionar para a página de produtos ao realizar login com sucesso")
+    public void testLoginComSucesso() throws IOException {
+        WebElement inputEmail = driver.findElement(By.name("email"));
+        WebElement inputPassword = driver.findElement(By.name("password"));
+        WebElement btnLogin = driver.findElement(By.xpath("//button[@type='submit']"));
+
+        inputEmail.sendKeys(TestData.EMAIL_VALIDO);
+        inputPassword.sendKeys(TestData.SENHA_VALIDA);
+        btnLogin.click();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
+        wait.until(ExpectedConditions.urlMatches("https://northwind-test-platform.vercel.app/products"));
+
+        Assertions.assertEquals("https://northwind-test-platform.vercel.app/products", driver.getCurrentUrl());
+
+        ScreenshotUtil.capturar(driver, "caminho_feliz");
+    }
+
 }
