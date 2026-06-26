@@ -218,7 +218,7 @@ docs/report/surefire-report.png
 
 ## 👨‍💻 Autor
 
-Desenvolvido por **Rafael Felipe** como parte do conteúdo educacional da **Gotas de Tecnologia**.
+Desenvolvido por **Rafael Felipe**.
 
 [![GitHub](https://img.shields.io/badge/GitHub-rafarfelipe-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/rafarfelipe)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-rafaelrfelipe-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/rafaelrfelipe/)
